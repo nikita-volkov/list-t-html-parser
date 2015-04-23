@@ -29,19 +29,28 @@ import qualified HTMLTokenizer.Parser as HT
 -- A backtracking HTML parser.
 newtype Parser m a =
   Parser { unwrap :: EitherT Error (StateT (ListT m HT.Token, [HT.Token]) m) a }
-  deriving (Functor, Applicative, Monad, MonadError Error)
+  deriving (Functor, Applicative, MonadError Error)
 
 -- | 
 type Error =
   Maybe ErrorDetails
 
 data ErrorDetails =
+  -- | A text message
+  ErrorDetails_Message Text |
   -- | Unexpected token
-  UnexpectedToken |
+  ErrorDetails_UnexpectedToken |
   -- | End of input
-  EOI
+  ErrorDetails_EOI
   deriving (Show)
 
+instance Monad m => Monad (Parser m) where
+  return =
+    Parser . return
+  (>>=) a b =
+    Parser $ unwrap a >>= unwrap . b
+  fail a =
+    throwError $ Just $ ErrorDetails_Message $ fromString a
 
 instance Monad m => Alternative (Parser m) where
   empty =
@@ -69,7 +78,7 @@ run p l =
 token :: Monad m => Parser m HT.Token
 token =
   Parser $ EitherT $ StateT $ \(incoming, backtrack) -> 
-  liftM (maybe (Left (Just EOI), (incoming, backtrack)) 
+  liftM (maybe (Left (Just ErrorDetails_EOI), (incoming, backtrack)) 
                (\(a, incoming') -> (Right a, (incoming', a : backtrack)))) $ 
   L.uncons incoming
 
@@ -77,25 +86,25 @@ openingTag :: Monad m => Parser m HT.OpeningTag
 openingTag =
   token >>= \case
     HT.Token_OpeningTag x -> return x
-    _ -> throwError (Just UnexpectedToken)
+    _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
 closingTag :: Monad m => Parser m HT.ClosingTag
 closingTag =
   token >>= \case
     HT.Token_ClosingTag x -> return x
-    _ -> throwError (Just UnexpectedToken)
+    _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
 text :: Monad m => Parser m Text
 text =
   token >>= \case
     HT.Token_Text x -> return x
-    _ -> throwError (Just UnexpectedToken)
+    _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
 comment :: Monad m => Parser m Text
 comment =
   token >>= \case
     HT.Token_Comment x -> return x
-    _ -> throwError (Just UnexpectedToken)
+    _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
 manyTill :: Monad m => Parser m a -> Parser m b -> Parser m ([a], b)
 manyTill a b =
