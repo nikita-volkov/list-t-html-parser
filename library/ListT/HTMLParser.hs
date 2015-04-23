@@ -5,6 +5,7 @@ module ListT.HTMLParser
   ErrorDetails(..),
   run,
   -- * Parsers
+  eoi,
   token,
   openingTag,
   closingTag,
@@ -13,6 +14,7 @@ module ListT.HTMLParser
   -- * Combinators
   manyTill,
   skipTill,
+  total,
 )
 where
 
@@ -75,6 +77,12 @@ run :: Monad m => Parser m a -> ListT m HT.Token -> m (Either Error a)
 run p l =
   flip evalStateT (l, []) $ runEitherT $ unwrap $ p
 
+-- |
+-- End of input.
+eoi :: Monad m => Parser m ()
+eoi =
+  token $> () <|> pure ()
+
 token :: Monad m => Parser m HT.Token
 token =
   Parser $ EitherT $ StateT $ \(incoming, backtrack) -> 
@@ -119,3 +127,12 @@ skipTill a =
   fix $ \loop ->
     a <|> (token *> loop)
 
+-- |
+-- Greedily consume all the input until the end,
+-- while running the provided parser.
+-- Same as:
+-- 
+-- > theParser <* eoi
+total :: Monad m => Parser m a -> Parser m a
+total a =
+  a <* eoi
