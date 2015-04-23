@@ -28,12 +28,14 @@ import qualified HTMLTokenizer.Parser as HT
 
 
 -- |
--- A backtracking HTML parser.
+-- A backtracking HTML-tokens stream parser.
 newtype Parser m a =
   Parser { unwrap :: EitherT Error (StateT (ListT m HT.Token, [HT.Token]) m) a }
   deriving (Functor, Applicative, MonadError Error)
 
--- | 
+-- |
+-- A possibly detailed parser error.
+-- When 'mzero' or 'empty' is used, an error value of 'Nothing' is produced.
 type Error =
   Maybe ErrorDetails
 
@@ -83,6 +85,8 @@ eoi :: Monad m => Parser m ()
 eoi =
   token $> () <|> pure ()
 
+-- |
+-- Any HTML token.
 token :: Monad m => Parser m HT.Token
 token =
   Parser $ EitherT $ StateT $ \(incoming, backtrack) -> 
@@ -90,30 +94,41 @@ token =
                (\(a, incoming') -> (Right a, (incoming', a : backtrack)))) $ 
   L.uncons incoming
 
+-- |
+-- An opening tag.
 openingTag :: Monad m => Parser m HT.OpeningTag
 openingTag =
   token >>= \case
     HT.Token_OpeningTag x -> return x
     _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
+-- |
+-- A closing tag.
 closingTag :: Monad m => Parser m HT.ClosingTag
 closingTag =
   token >>= \case
     HT.Token_ClosingTag x -> return x
     _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
+-- |
+-- A text between tags with HTML-entities decoded.
 text :: Monad m => Parser m Text
 text =
   token >>= \case
     HT.Token_Text x -> return x
     _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
+-- |
+-- Contents of a comment.
 comment :: Monad m => Parser m Text
 comment =
   token >>= \case
     HT.Token_Comment x -> return x
     _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
+-- |
+-- Apply a parser multiple times until another parser is satisfied.
+-- Returns results of both parsers.
 manyTill :: Monad m => Parser m a -> Parser m b -> Parser m ([a], b)
 manyTill a b =
   fix $ \loop -> 
