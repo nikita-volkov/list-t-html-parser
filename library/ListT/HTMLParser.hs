@@ -67,11 +67,13 @@ instance Monad m => Alternative (Parser m) where
   (<|>) a b =
     Parser $ EitherT $ StateT $ \(incoming, backtrack) -> do
       (aResult, (incoming', backtrack')) <- flip runStateT (incoming, []) $ runEitherT $ unwrap $ a
-      case aResult of
-        Left _ -> do
-          flip runStateT (foldr L.cons incoming' backtrack', []) $ runEitherT $ unwrap $ b
-        Right aResult -> do
-          return (Right aResult, (incoming', backtrack'))
+      (result'', (incoming'', backtrack'')) <-
+        case aResult of
+          Left _ -> do
+            flip runStateT (foldl' (flip L.cons) incoming' backtrack', []) $ runEitherT $ unwrap $ b
+          Right aResult -> do
+            return (Right aResult, (incoming', backtrack'))
+      return (result'', (incoming'', backtrack'' <> backtrack))
 
 instance Monad m => MonadPlus (Parser m) where
   mzero = empty
