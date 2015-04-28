@@ -51,7 +51,7 @@ data ErrorDetails =
   ErrorDetails_UnexpectedToken |
   -- | End of input
   ErrorDetails_EOI
-  deriving (Show)
+  deriving (Show, Eq)
 
 instance Monad m => Monad (Parser m) where
   return =
