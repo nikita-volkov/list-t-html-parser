@@ -11,6 +11,7 @@ module ListT.HTMLParser
   closingTag,
   text,
   comment,
+  html,
   -- * Combinators
   manyTill,
   skipTill,
@@ -23,6 +24,8 @@ import MTLPrelude hiding (Error, shift)
 import Control.Monad.Trans.Either hiding (left, right)
 import ListT (ListT)
 import Data.Text (Text)
+import qualified Data.Text.Lazy.Builder as Text (Builder)
+import qualified Data.Text.Lazy.Builder as Text.Builder
 import qualified ListT as L
 import qualified HTMLTokenizer.Parser as HT
 
@@ -151,3 +154,7 @@ skipTill a =
 total :: Monad m => Parser m a -> Parser m a
 total a =
   a <* eoi
+
+html :: Monad m => Parser m Text.Builder
+html =
+  undefined
