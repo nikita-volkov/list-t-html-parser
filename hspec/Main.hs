@@ -35,6 +35,40 @@ main =
                 return 2
       result <- parse parser text
       shouldBe result (Right 2)
+    it "Complex" $ do
+      let 
+        text = "<a><b><c></c></b></a>"
+        parser = 
+          a <|> b
+          where
+            a = 
+              do
+                P.openingTag
+                b <|> c
+                P.openingTag
+                return 1
+              where
+                b =
+                  do
+                    ("b", _, _) <- P.openingTag
+                    P.closingTag
+                c =
+                  do
+                    ("b", _, _) <- P.openingTag
+                    ("c", _, _) <- P.openingTag
+                    P.closingTag
+            b =
+              do
+                P.openingTag
+                P.openingTag
+                P.openingTag
+                P.closingTag
+                P.closingTag
+                P.closingTag
+                return 2
+      result <- parse parser text
+      shouldBe result (Right 2)
+
 
 
 -- | Scrape the body of a GET response using an HTML parser.
