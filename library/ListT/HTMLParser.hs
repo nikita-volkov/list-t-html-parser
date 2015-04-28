@@ -13,6 +13,7 @@ module ListT.HTMLParser
   comment,
   html,
   -- * Combinators
+  many1,
   manyTill,
   skipTill,
   total,
@@ -129,6 +130,12 @@ comment =
   token >>= \case
     HT.Token_Comment x -> return x
     _ -> throwError (Just ErrorDetails_UnexpectedToken)
+
+-- |
+-- Apply a parser at least one time.
+many1 :: Monad m => Parser m a -> Parser m [a]
+many1 a =
+  (:) <$> a <*> many a
 
 -- |
 -- Apply a parser multiple times until another parser is satisfied.
