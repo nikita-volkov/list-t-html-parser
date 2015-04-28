@@ -11,6 +11,7 @@ module ListT.HTMLParser
   closingTag,
   text,
   comment,
+  html,
   -- * Combinators
   manyTill,
   skipTill,
@@ -23,8 +24,11 @@ import MTLPrelude hiding (Error, shift)
 import Control.Monad.Trans.Either hiding (left, right)
 import ListT (ListT)
 import Data.Text (Text)
+import qualified Data.Text.Lazy.Builder as Text (Builder)
+import qualified Data.Text.Lazy.Builder as Text.Builder
 import qualified ListT as L
 import qualified HTMLTokenizer.Parser as HT
+import qualified ListT.HTMLParser.Renderer as Renderer
 
 
 -- |
@@ -151,3 +155,28 @@ skipTill a =
 total :: Monad m => Parser m a -> Parser m a
 total a =
   a <* eoi
+
+-- |
+-- The textual HTML representation of a proper HTML tree node.
+-- 
+-- Useful for consuming HTML-formatted snippets.
+html :: Monad m => Parser m Text.Builder
+html =
+  enclosingTag <|> brokenOpenTag <|> text' <|> comment'
+  where
+    enclosingTag =
+      do
+        ot@(n, _, False) <- openingTag  
+        theHTML <- mconcat <$> many html
+        ct <- closingTag
+        guard $ ct == n
+        return $ Renderer.openingTag ot <> theHTML <> Renderer.closingTag ct
+    brokenOpenTag =
+      Renderer.openingTag . repair <$> openingTag
+      where
+        repair (name, attrs, _) = (name, attrs, True)
+    text' =
+      Renderer.text <$> text
+    comment' =
+      Renderer.comment <$> comment
+
