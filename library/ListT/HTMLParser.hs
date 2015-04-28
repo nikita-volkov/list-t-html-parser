@@ -167,7 +167,7 @@ html =
     enclosingTag =
       do
         ot@(n, _, False) <- openingTag  
-        theHTML <- html
+        theHTML <- mconcat <$> many html
         ct <- closingTag
         guard $ ct == n
         return $ Renderer.openingTag ot <> theHTML <> Renderer.closingTag ct

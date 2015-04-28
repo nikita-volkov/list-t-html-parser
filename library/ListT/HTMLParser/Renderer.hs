@@ -12,12 +12,12 @@ openingTag :: OpeningTag -> Builder
 openingTag (name, attrs, closed) =
   singleton '<' <>
   ciText name <>
-  mconcat (intersperse (singleton ' ') (map attribute attrs)) <>
+  mconcat (map (mappend (singleton ' ') . attribute) attrs) <>
   bool (singleton '>') (fromString "/>") closed
 
 attribute :: Attribute -> Builder
 attribute (name, value) =
-  maybe id (flip mappend . mappend (singleton '=') . HTMLEntities.Builder.text) value $
+  maybe id (flip mappend . mappend (fromString "=\"") . flip mappend (singleton '"') . HTMLEntities.Builder.text) value $
   ciText name
 
 ciText :: CI.CI Text -> Builder
