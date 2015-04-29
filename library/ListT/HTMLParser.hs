@@ -190,7 +190,7 @@ total a =
 -- If you want to consume all children of a node, 
 -- use it in combination with 'many' or 'many1'. E.g., the following parser:
 -- 
--- > openingTag *> mconcat <$> many html
+-- > openingTag *> (mconcat <$> many html)
 -- 
 -- will produce a merged text builder, which consists of the following nodes:
 -- 
