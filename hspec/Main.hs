@@ -69,6 +69,12 @@ main =
                 return 2
       result <- parse parser text
       shouldBe result (Right 2)
+    context "HTML with unclosed tags" $ do
+      let text = "<a><br><br></a>"
+      context "\"html\" parser result" $ do
+        result <- runIO $ parse (P.html) text
+        it "should not be failure" $ shouldSatisfy result isRight
+        it "should be proper" $ shouldBe result (Right "<a><br/><br/></a>")
     context "HTML sample file #1" $ do
       text <- runIO $ Data.Text.IO.readFile "hspec/samples/1.html"
       context "Running the \"html\" parser on it" $ do
