@@ -166,9 +166,46 @@ total a =
   a <* eoi
 
 -- |
--- The textual HTML representation of a proper HTML tree node.
+-- The textual HTML representation of a proper HTML-tree node.
 -- 
 -- Useful for consuming HTML-formatted snippets.
+-- 
+-- E.g., when the following parser:
+-- 
+-- > openingTag >> html
+-- 
+-- is run against the following HTML snippet:
+-- 
+-- > <ul>
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- >   <li>I'm not your buddy, <b>guy</b>!</li>
+-- >   <li>He's not your guy, <b>friend</b>!</li>
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- > </ul>
+-- 
+-- it'll produce the following text builder value:
+-- 
+-- > <li>I'm not your friend, <b>buddy</b>!</li>
+-- 
+-- If you want to consume all children of a node, 
+-- use it in combination with 'many' or 'many1'. E.g., the following parser:
+-- 
+-- > openingTag *> mconcat <$> many html
+-- 
+-- will produce a merged text builder, which consists of the following nodes:
+-- 
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- >   <li>I'm not your buddy, <b>guy</b>!</li>
+-- >   <li>He's not your guy, <b>friend</b>!</li>
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- 
+-- Notice that it's safe to assume 
+-- that it will not consume the closing @\</ul\>@ tag,
+-- because it does not begin a valid HTML-tree node.
+-- 
+-- Also notice that this parser is smart enough to consume the unclosed tags,
+-- interpreting them as closed singletons. 
+-- E.g., @\<br\>@ will be consumed as @\<br/\>@.
 html :: Monad m => Parser m Text.Builder
 html =
   enclosingTag <|> brokenOpenTag <|> text' <|> comment'
