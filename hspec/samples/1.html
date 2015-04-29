@@ -1,0 +1,991 @@
+
+    <!doctype HTML>
+    <html class="no-js" lang="no">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
+        <meta name="description" content="Prosjektering av st&#229;lkonstruksjoner for seismisk p&#229;virkning i henhold til Eurokode 8 / NS-EN 1998, med eksempler p&#229; dimensjonering av bygninger i Norge med hensyn p&#229; jordskjelv." />
+        
+
+        <link rel="canonical" href="https://www.tekna.no/kurs/prosjektering-av-stalkonstruksjoner-for-seismisk-pavirkning/" />
+
+        <title> Prosjektering av st&#229;lkonstruksjoner for seismisk p&#229;virkning </title>
+        
+        <link rel="stylesheet" href="/Static/build/app.min.css?v=082" />
+        <script src="/Static/bower_components/modernizr/modernizr.min.js"></script>
+        <link rel="icon" type="image/png" href="/Static/img/favicon.ico" />
+
+        <!--[if lt IE 9]>
+        <div class="obsolete__browser">
+            
+        Hei, det ser ut som du bruker en utdatert nettleser. Vi anbefaler at du har siste versjon av nettleseren installert. Tekna.no st&#248;tter blant annet Internet Explorer,
+        Firefox, Google Chrome, Safari og Opera. Dersom du ikke har mulighet til &#229; oppdatere nettleseren til siste versjon, kan du laste ned andre nettlesere her:
+      
+        <a class="obsolete__browser-link" href="http://browsehappy.com/">http://browsehappy.com</a>
+        </div>
+        <![endif]-->
+
+
+    </head>
+    <body>
+        
+        <!-- Google Tag Manager -->
+        <noscript>
+            <iframe src="//www.googletagmanager.com/ns.html?id=GTM-WSBD"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <script>
+        (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WSBD');</script>
+        <!-- End Google Tag Manager -->
+
+        
+
+        <div class="off-canvas-wrap wrapper" data-offcanvas>
+            <div class="inner-wrap">
+                
+<a id="skiplink" href="#content">Hopp til innhold</a>
+
+<aside id="off-canvas__nav" class="right-off-canvas-menu">
+
+    <nav role="navigation">
+        <div class="off-canvas__close-container">
+            <div class="exit-off-canvas off-canvas__close"><span class="icon-cross off-canvas__close-icon"></span></div>
+        </div>
+
+
+            <ul class="off-canvas__container tekna-font-bold">
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/" title="Forsiden"><span>Forsiden</span></a>
+                        
+                        
+                        
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/kurs/" title="Kurs og arrangementer"><span>Kurs og arrangementer</span></a>
+                        
+                        
+                        
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/medlemsfordeler/"><span>Medlemsfordeler</span></a>
+                        
+                        
+                        
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/lonn-og-arbeidsvilkar/"><span>L&#248;nn og arbeidsvilk&#229;r</span></a>
+                        
+                        
+                        
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/fag-og-nettverk/"><span>Fag og nettverk</span></a>
+                        
+                        
+                        
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/karriere/"><span>Karriere</span></a>
+                        
+                        
+                        
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/juridisk-bistand/"><span>Juridisk bistand</span></a>
+                        
+                        
+                        
+                    </li>
+            </ul>
+
+            <ul class="off-canvas__container">
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/meninger/"><span>Meninger</span></a>
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/om-tekna/"><span>Om Tekna</span></a>
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/aktuelt/"><span>Aktuelt</span></a>
+                    </li>
+            </ul>
+
+            <ul class="off-canvas__container">
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/tillitsvalgt/"><span>Tillitsvalgt</span></a>
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="http://portal.tekna.no/student" title="Student"><span>Student</span></a>
+                    </li>
+            </ul>
+
+            <ul class="off-canvas__container">
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/om-tekna/organisasjon/avdelingene/"><span>Lokalavdelinger</span></a>
+                    </li>
+                    <li class="off-canvas__nav-item">
+                        <a class="off-canvas__nav-link" href="/kontakt-oss/"><span>Kontakt oss</span></a>
+                    </li>
+            </ul>
+        
+        <ul class="off-canvas__container">
+            <li class="off-canvas__nav-item">
+
+                Language:
+                    <span class="off-canvas__nav-link--selected">no</span> | <a class="off-canvas__nav-link" href="/en"><span>en</span></a>
+            </li>
+        </ul>
+
+        <ul class="off-canvas__container">
+            <li class="off-canvas__nav-item"><a class="button small expand" href="/medlemsfordeler/"><span>Bli medlem</span></a></li>
+        </ul>
+
+</nav>
+
+    
+
+    
+
+
+    
+
+</aside>
+
+                
+
+
+
+
+
+
+    <!-- cookie info panel -->
+    <div class="cookie-infopanel">
+        Denne nettsiden bruker informasjonskapsler (cookies). Ved &#229; fortsette &#229; bruke nettsiden samtykker du i bruken av v&#229;re informasjonskapsler. 
+        <a onClick="hideForever();" href="/personvern/" class="link-underline">Les mer her.</a>
+        <span onClick="hideForever();" class="cookie-infopanel--close"><span class="cookie-infopanel--close-icon"></span></span>
+    </div>
+<a class="exit-off-canvas"></a>
+
+
+<header class="header">
+    <div class="header--center">
+
+        <a href="/">
+            <span class="header__logo">
+                <span class="hide">Tekna - Norges st&#248;rste fagforening for deg med master i realfag eller teknologi</span>             
+            </span>
+        </a>
+
+
+        
+        <a href="#" class="header__nav right-off-canvas-toggle">
+            <span class="header__nav-text header__nav-text--menu">Meny  <span class="header__nav-icon"></span></span>
+        </a>
+
+
+            
+            <div class="show-for-medium-up header__nav">
+                <a href="https://portal.tekna.no/dinside" rel="nofollow"><span class="header__nav-text">Login </span><span class="header__login-icon"></span></a>
+            </div>
+            <div class="hidden-for-medium-up header__nav">
+                <a href="https://portal.tekna.no/dinside" rel="nofollow"><span class="header__login-icon"></span></a>
+            </div>
+
+            <div class="header__nav search--site-container">
+                
+                <div class="show-for-medium-up search--site-grid">
+                    <div class="search search--site hide">
+                        <form action="/sokeside/" method="GET">
+                            <input id="js-search--site__search__field" name="q" class="search__field" type="search" placeholder='S&#248;k i tekna.no'
+                                   autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                            <input class="visuallyhidden" type="submit" value='s&#248;k'>
+                        </form>
+                    </div>
+                </div>
+                <div id="js-search--site" class="show-for-medium-up"><span class="header__nav-text">S&#248;k </span><span class="header__search-icon"></span></div>
+
+                <div id="js-search--site--mob" class="hide-for-medium-up"><span class="header__search-icon"></span></div>
+            </div>
+
+</div>
+
+    
+    <div class="hide-for-medium-up search--site-grid--mob">
+        <div class="search search--site--mob hide">
+            <form action="/sokeside/" method="GET">
+                <input id="js-search--site__search__field--mob" name="q" class="search__field" type="search" placeholder='S&#248;k i tekna.no'
+                       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">                
+                <input class="visuallyhidden" type="submit" value='s&#248;k'>
+            </form>
+        </div>
+    </div>
+
+</header>
+
+
+
+
+
+                <div id="content">
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section role="main" class="main event">
+    <div class="row">
+
+        <div class="event__grid">
+                      
+                <header>
+                    <h1 class="event__title">Prosjektering av st&#229;lkonstruksjoner for seismisk p&#229;virkning</h1>
+                    <div class="subtitle margin-bottom-small"></div>
+                </header>
+            
+            
+            <div class="event__time-date">
+
+
+        <div class="event__time-date-item"><span class="icon-calendar"></span> 7. mai</div>
+            <div class="event__time-date-item"><span class="icon-time"></span> kl 09:00&ndash;16:30</div>
+    
+        <div class="event__time-date-item">
+                <span class="icon-map-marker"></span><a href="https://www.google.com/maps/@59.91043,10.72528,14z/data=!3m1!4b1!4m2!3m1!1s0x0:0x0" target="_blank">Felix Konferansesenter, OSLO</a>
+        </div>
+</div>
+            
+            <p class="intro--event">Prosjektering av st&#229;lkonstruksjoner for seismisk p&#229;virkning i henhold til Eurokode 8 / NS-EN 1998, med eksempler p&#229; dimensjonering av bygninger i Norge med hensyn p&#229; jordskjelv.</p>
+
+            
+            <a href="" id="js-get-signup-url" class="button expand show-for-small-only">Meld meg på</a>
+
+            <div class="row">
+                <div class="event__grid-left">
+                    <!-- Start Second tabs-->
+<div id="tabbed-nav">
+
+    <!-- Tab Navigation Menu -->
+    <ul>
+        <li data-link="om-kurset"><a>Beskrivelse</a></li>
+            <li data-link="kursprogram"><a>Program</a></li>
+
+                <li data-link="praktiske-opplysninger"><a>Praktiske opplysninger</a></li>
+        
+    </ul>
+
+    <!-- Content container -->
+    <div>
+        <div>
+            <p>Konstruksjoner på land (og offshore) i Norge skal beregnes og dimensjoneres for jordskjelv. </p>
+
+<p>Dette kurset vil i tillegg til å gi de grunnleggende regler for jordskjelvdimensjonering også gi en mer detaljert innføring i de nye prosjekteringsreglene for laster fra seismiske påvirkninger i henhold til Eurokode 8: NS-EN 1998 Prosjektering av konstruksjoner for seismisk påvirkning. </p>
+
+<p>Prosjektering mhp jordskjelv kan optimaliseres gjennom valg av riktig design og ved å dimensjonere med duktile knutepunkter. Dette er et viktig konkurranseaspekt, og noe som vil gi en rimeligere konstruksjon. </p>
+
+<p>Kurset henvender seg primært til prosjekterende ingeniører og til ingeniører hos byggemyndigheter o.l.</p>
+
+<p><strong><em>Forelesere er Emrah Erduran, NJF/Rambøll Norge <br>og Farzin Shahrokhi, fagsjef jordskjelvgruppe Rambøll Norge </em></strong></p>
+
+            
+        </div>
+        
+            <div>
+                
+<div class="event__schedule">
+    <div class="event__schedule-grid-main">
+        <div class="row">
+            <div class="event__schedule-grid">
+                <div class="Dag">
+                    <p class="Tittel">Program</p>
+                    <div class="Beskrivelse"><p><strong>Part 1 &ndash; Rules and seismic analyses</strong><br>
+                <br>
+                8:30 Registrering<br>
+                <br>
+                09:00 <strong>General design rules &amp; Eurocode 8</strong><br>
+                <em>Emrah Erduran, NJF/Ramb&oslash;ll Norge</em><br>
+                <br>
+                09:30 <strong>Design principles for seismic resistance structures (conceptual design)</strong><br>
+                <em>Emrah Erduran, NJF/Ramb&oslash;ll Norge</em><br>
+                <br>
+                10:30 Kaffepause<br>
+                <br>
+                10:45 <strong>Calculation of seismic actions according to Eurocode 8</strong><br>
+                - Lateral Force Method of Analysis<br>
+                - Modal Response Spectrum Analysis<br>
+                <em>Emrah Erduran </em><em>NJF/Ramb&oslash;ll Norge</em><br>
+                <br>
+                12:00 Lunsj<br>
+                <br>
+                13:00 <strong>Design criteria and rules for steel structures in Eurocode 8</strong><br>
+                <em>Farzin Shahrokhi, fagsjef jordskjelvgruppe Rambøll Norge</em><br>
+                <br>
+                14:30 Kaffepause<br>
+                <br>
+                <strong>Part 2 &ndash; Design of steel buildings in Norway</strong><br>
+                <br>
+                14.45 <strong>Case study no. 1</strong><br>
+                <em>Farzin Shahrokhi, fagsjef jordskjelvgruppe Rambøll Norge</em><br>
+                <br>
+                15:30 <strong>Case study no. 2</strong><br>
+                <em>Farzin Shahrokhi, fagsjef jordskjelvgruppe Rambøll Norge</em><br>
+                <br>
+                16:15 <strong>Discussion</strong><br>
+                <br>
+                16.30 End<br>
+              </span>              </p></td></p>
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div>
+
+        <!-- TODO: http://joelabrahamsson.com/custom-rendering-of-content-areas/ -->
+
+<div>
+    <p><b><span style="text-decoration: underline;">Konferanse, deltakeravgifter:</span></b><b><br /></b><span style="text-decoration: underline;">Deltageravgift</span>: (inkl. lunsj og 2 kaffepauser)<br />kr. 6.200 for medlemmer&nbsp;i NFS og Norsk Stålforbund<br />kr. 6.500 for medlemmer i Tekna <br />kr. 6.700 for ikke-medlemmer<br /><br /><b>Kvantumsrabatter:&nbsp;<br /></b>minimum 5 påmeldte: 10% rabatt<br />minimum 10 påmeldte 20% rabatt<br />minimum 15 påmeldte 30% rabatt<br />minimum 20 påmeldte 40% rabatt<a href="mailto:registrering@tekna.no"><br /></a><span style="text-decoration: underline;"><br /><b>Dokumenter:&nbsp;<br /></b></span>Kurskompendium: Kurset inkluderer e-kurskompendium<br />Standarder: Bestilles av den enkelte fra <a href="http://www.standard.no" target="_blank">Standard Norge</a>.</p>
+<p><b><span style="text-decoration: underline;">Administrasjon:</span></b><b> &nbsp;<br /></b>Tekna Servicekontoret, Postboks 2312 Solli, 0201 Oslo<br />Telefon: 22 94 75 60/61 - Telefax: 22 94 75 01&nbsp;<br />E-post: <a href="mailto:registrering@tekna.no">registrering@tekna.no</a> <br /><br /><b><span style="text-decoration: underline;">Avbestilling:</span></b><b><br /></b>Dersom avbestilling skjer etter påmeldingsfristens utløp, må full avgift betales. Kun skriftlig avbestilling, som er bekreftet mottatt av Tekna, godtas. Ved avbestilling pga sykdom, ber vi om at legeattest fremlegges. Hvis ikke, må full avgift betales.&nbsp;</p>
+<p><b>Påmeldingsfrist 30. april 2015<br /> <br /> </b></p>
+</div>
+        
+                
+</div>
+</div>
+<!-- Zozo Tabs End-->
+                </div>
+
+                <aside class="sidebar-grid">
+                    <div class="sidebar">    <div class="event__data">
+        <h2 class="event__data-title">Pris</h2>
+        <dl>
+                <dt class="event__data-type">Ikke medlem</dt>
+                <dd class="event__data-def">
+                            Kr 6700,-
+
+                    
+                </dd>
+                <dt class="event__data-type">Medlem i Tekna</dt>
+                <dd class="event__data-def">
+                            Kr 6500,-
+
+                    
+                </dd>
+                <dt class="event__data-type">Medlem i NFS eller Norsk St&#229;lforbund</dt>
+                <dd class="event__data-def">
+                            Kr 6200,-
+
+                    
+                </dd>
+
+        </dl>
+    </div>
+
+            <a href="/kurs/prosjektering-av-stalkonstruksjoner-for-seismisk-pavirkning/Enroll/" class="js-signup-url button expand">Meld meg p&#229;</a>
+<div class="event__data-terms">
+        
+        <p class="event__data-terms-item">
+            Kontakt:
+                <a href="mailto:Kristian.Ivsett.Johnsen@tekna.no">Ivsett Johnsen Kristian</a>
+- +4792019692        </p>
+
+</div>
+
+</div>
+                </aside>
+            </div>
+        </div>
+
+        
+        <div class="event__grid">
+            
+            
+            
+            
+        </div>
+        
+                <!-- relaterterte kurs-->
+                <div class="event__grid">
+                        <h2 class="margin-bottom__small tekna-font-regular">Andre fag og arrangementer innenfor dette emnet:</h2>
+    <div class="row" data-equalizer>
+
+
+            <div class="medium-4 large-4 columns">
+
+                <div class="campaign__events panel" data-equalizer-watch>
+                    <p class="tekna-font-bold">Building and construction</p>
+                    <p><a class="campaign__events-title" href="/en/events/joints-of-rectangular-hollow-sections/">Joints of Rectangular Hollow Sections</a></p>
+                    <div class="campaign__events-time-date">
+                        <span class="icon-calendar"></span><div class="campaign__events-item"> Apr. 29</div>
+                            <span class="icon-time"></span>
+                            <div class="campaign__events-item"> 9am &ndash; 4pm</div>
+                                                        <span class="icon-map-marker"></span>
+                                <div class="campaign__events-item">
+                                    <a href="https://www.google.com/maps/@59.91043,10.72528,14z/data=!3m1!4b1!4m2!3m1!1s0x0:0x0" target="_blank">Felix Konferansesenter, OSLO</a>
+                                </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="medium-4 large-4 columns">
+
+                <div class="campaign__events panel" data-equalizer-watch>
+                    <p class="tekna-font-bold">Bygg og anlegg</p>
+                    <p><a class="campaign__events-title" href="/kurs/u3--engelsk---betongarbeider---utforelse-av-betongkonstruksjoner-for-produksjonkontrolleder/">(U3) Execution of concrete for supervisors</a></p>
+                    <div class="campaign__events-time-date">
+                        <span class="icon-calendar"></span><div class="campaign__events-item"> 4.&ndash;8. mai</div>
+                                                        <span class="icon-map-marker"></span>
+                                <div class="campaign__events-item">
+                                    <a href="https://www.google.com/maps/@60.16354,11.16167,14z/data=!3m1!4b1!4m2!3m1!1s0x0:0x0" target="_blank">Quality Airport Hotel Gardermoen, JESSHEIM</a>
+                                </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="medium-4 large-4 columns">
+
+                <div class="campaign__events panel" data-equalizer-watch>
+                    <p class="tekna-font-bold">Bygg og anlegg</p>
+                    <p><a class="campaign__events-title" href="/kurs/nff-temadag-2015/">NFF Temadag 2015</a></p>
+                    <div class="campaign__events-time-date">
+                        <span class="icon-calendar"></span><div class="campaign__events-item"> 5. mai</div>
+                            <span class="icon-time"></span>
+                            <div class="campaign__events-item"> kl 12:30&ndash;18:00</div>
+                                                        <span class="icon-map-marker"></span>
+                                <div class="campaign__events-item">
+                                    <a href="https://www.google.com/maps/@59.91405,10.72713,14z/data=!3m1!4b1!4m2!3m1!1s0x0:0x0" target="_blank">Ingeni&#248;renes Hus, OSLO</a>
+                                </div>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+
+                </div>
+
+        
+        <div class="event__grid show-for-small-only">
+            <span class="icon-angle-left"></span> <a href="/kurs/">Til kursoversikt</a>
+        </div>
+
+
+    </div>
+</section>
+
+
+                </div>
+                <footer class="footer-container">
+
+    <div class="footer__contact">
+    <div class="row">
+
+        <div class="footer__contact__wrapper">
+
+            <div class="footer__contact__icon-bg">
+                <span class="footer__contact__icon-contact" aria-hidden="true"></span>
+            </div>
+            <p class="footer__contact__item">
+                Teknas sentralbord<br />
+                <span itemprop="telephone"><a class="footer__contact__item-number" href="tel:22 94 75 00">22 94 75 00</a></span>
+
+            </p>
+        </div>
+
+    </div>
+</div>
+
+    <div class="footer">
+
+        <!--custom grid klasse-->
+        <div class="row">
+            <div class="footer__grid">
+                <div class="row">
+                    <div><div><div class="footer__grid-sub">
+    <div class="footer__nav">
+        <h3 class="footer__nav-title"><a class="footer__nav-titlelink" href="/kurs/"> Kurs og arrangementer</a></h3>
+        <ul class="footer__nav-list">
+            <li>
+                <a class="footer__nav-listlink" href="/kurs/prosjektledelse/"><span class="footer__nav-listlink--hover">Teknas prosjektskole</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/en/events/"><span class="footer__nav-listlink--hover">International Conferences</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/kurs/kursdagene/"><span class="footer__nav-listlink--hover">Kursdagene</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/kurs/nettkurs/"><span class="footer__nav-listlink--hover">Nettkurs</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/video/"><span class="footer__nav-listlink--hover">Video-overf&#248;rte arrangementer</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/kurs/"><span class="footer__nav-listlink--hover">Alle kommende arrangementer</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div><div><div class="footer__grid-sub">
+    <div class="footer__nav">
+        <h3 class="footer__nav-title"><a class="footer__nav-titlelink" href="/medlemsfordeler/">Medlemskap</a></h3>
+        <ul class="footer__nav-list">
+            <li>
+                <a class="footer__nav-listlink" href="/medlemsfordeler/"><span class="footer__nav-listlink--hover">Medlemsfordeler</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/medlemsfordeler/kriterier-for-medlemskap/"><span class="footer__nav-listlink--hover">Opptakskriterier</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/medlemsfordeler/innmelding/"><span class="footer__nav-listlink--hover">S&#248;knad om medlemskap</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/medlemsfordeler/kontingent/"><span class="footer__nav-listlink--hover">Priser og rabatter</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/medlemsfordeler/studentmedlemskap/"><span class="footer__nav-listlink--hover">Student</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/medlemsfordeler/selvstendig-naringsdrivende/"><span class="footer__nav-listlink--hover">Tilbud for selvstendig n&#230;ringsdrivende</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div><div><div class="footer__grid-sub">
+    <div class="footer__nav">
+        <h3 class="footer__nav-title"><a class="footer__nav-titlelink" href="/lonn-og-arbeidsvilkar/">L&#248;nn og arbeidsvilk&#229;r</a></h3>
+        <ul class="footer__nav-list">
+            <li>
+                <a class="footer__nav-listlink" href="/lonn-og-arbeidsvilkar/lonnsstatistikk/"><span class="footer__nav-listlink--hover">L&#248;nnsstatistikk</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/lonn-og-arbeidsvilkar/lonnsforhandlinger/"><span class="footer__nav-listlink--hover">L&#248;nnsforhandlinger</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/lonn-og-arbeidsvilkar/lonnsforhandlinger/tariffavtaler/"><span class="footer__nav-listlink--hover">Tariffavtaler</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/lonn-og-arbeidsvilkar/pensjon/"><span class="footer__nav-listlink--hover">Pensjon og forsikringer</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/lonn-og-arbeidsvilkar/rettigheter/"><span class="footer__nav-listlink--hover">Juss og arbeidsliv</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!--custom grid klasse-->
+        <div class="row">
+            <div class="footer__grid">
+                <div class="row">
+                    <div><div><div class="footer__grid-sub">
+    <div class="footer__nav">
+        <h3 class="footer__nav-title"><a class="footer__nav-titlelink" href="">Fag og nettverk</a></h3>
+        <ul class="footer__nav-list">
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/bygg-og-anlegg/"><span class="footer__nav-listlink--hover">Bygg og anlegg</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/olje-og-gass/"><span class="footer__nav-listlink--hover">Olje og gass</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/energi-og-klima/"><span class="footer__nav-listlink--hover">Energi og klima</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/miljo-og-biovitenskap/"><span class="footer__nav-listlink--hover">Milj&#248;- og biovitenskap</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/samferdsel-og-infrastruktur/"><span class="footer__nav-listlink--hover">Samferdsel og infrastruktur</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/realfag-og-utdanning/"><span class="footer__nav-listlink--hover">Realfag og utdanning</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/it-og-tele/"><span class="footer__nav-listlink--hover">IT og tele</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/forskning-og-innovasjon/"><span class="footer__nav-listlink--hover">Forskning og innovasjon</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/fag-og-nettverk/ledelse-og-utvikling/"><span class="footer__nav-listlink--hover">Ledelse og utvikling</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div><div><div class="footer__grid-sub">
+    <div class="footer__nav">
+        <h3 class="footer__nav-title"><a class="footer__nav-titlelink" href="/om-tekna/organisasjon/avdelingene/">Lokalavdelinger</a></h3>
+        <ul class="footer__nav-list">
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/bergen/"><span class="footer__nav-listlink--hover">Bergen</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/drammen/"><span class="footer__nav-listlink--hover">Drammen</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/oslo/"><span class="footer__nav-listlink--hover">Oslo</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/stavanger/"><span class="footer__nav-listlink--hover">Stavanger</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/telemark/"><span class="footer__nav-listlink--hover">Telemark</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/tromso/"><span class="footer__nav-listlink--hover">Troms&#248;</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/trondheim/"><span class="footer__nav-listlink--hover">Trondheim</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/vest-agder/"><span class="footer__nav-listlink--hover">Vest-Agder</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/vestfold/"><span class="footer__nav-listlink--hover">Vestfold</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/om-tekna/organisasjon/avdelingene/"><span class="footer__nav-listlink--hover">- Vis alle avdelinger -</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div><div><div class="footer__grid-sub">
+    <div class="footer__nav">
+        <h3 class="footer__nav-title"><a class="footer__nav-titlelink" href="/kontakt-oss/">Kontakt oss</a></h3>
+        <ul class="footer__nav-list">
+            <li>
+                <a class="footer__nav-listlink" href="/juridisk-bistand/"><span class="footer__nav-listlink--hover">Kontakt juridisk kontor</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/kontakt-oss/medlemskontor--kontingent/"><span class="footer__nav-listlink--hover">Faktura/kontingent</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/kontakt-oss/distrikskontorer/"><span class="footer__nav-listlink--hover">Distrikskontorer</span></a>
+            </li>
+            <li>
+                <a class="footer__nav-listlink" href="/kontakt-oss/presserom/"><span class="footer__nav-listlink--hover">Presserom</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="footer__grid"><div class="row">
+    <div class="social__grid-sub">
+        <div class="social__icon-bg">
+            <a href="https://www.facebook.com/Tekna" target="_blank"><span class="social__icon-facebook"></span></a>                                                          
+        </div>
+    </div>
+    <div class="social__grid-sub">
+        <div class="social__icon-bg">
+            <a href="http://www.twitter.com/_Tekna_" target="_blank"><span class="social__icon-twitter"></span></a>
+        </div>
+    </div>
+
+    <div class="social__grid-sub">
+        <div class="social__icon-bg">
+            <a href="http://www.linkedin.com/groupRegistration?gid=1483347" target="_blank"><span class="social__icon-inkedin"></span></a>           
+        </div>
+    </div>
+</div>
+</div>
+        </div>
+
+        <a href="#" class="go-top"><span class="icon-angle-up"></span></a>
+    </div>
+
+    
+<div class="footer__address">
+    <div class="row">
+        <div class="small-12 columns text-center">
+            <span class="footer__address-item">
+                Tekna - Teknisk-naturvitenskapelig forening &#160;&#160;–&#160;&#160; Pb. 2312 Solli, 0201 Oslo &#160;&#160;–&#160;&#160; Bes&#248;ksadresse: Dronning Mauds gt 15 &#160;&#160;–&#160;&#160; Org.nr 971420782 &#160;&#160;–&#160;&#160; 
+                
+                <a href="/personvern/">Personvern</a>
+                &nbsp;&nbsp; – &nbsp;&nbsp; <a href="/kontakt-oss/">Kontakt oss</a>
+
+            </span>
+        </div>
+    </div>
+</div>
+
+
+
+</footer>
+
+
+
+            </div>
+        </div>
+
+        
+        <script src="/Static/bower_components/jquery/dist/jquery.min.js"></script>
+
+        
+        <script src="/Static/build/foundation_tekna.min.js?v=007"></script>
+        <script src="/Static/build/app.min.js?v=032"></script>
+        
+        <script src="/Static/js-views/salary-stats.js"></script>
+
+
+        <script src="/Static/typeahead.js/dist/typeahead.bundle.min.js"></script>
+        
+        
+        <script>
+            var EPiSERVER_FIND_URL = "https://es-eu-api01.episerver.net/VUakyHWcrQkl2vPmavAX3Gok2Rf58Fyr/tekna_index13752/_search";
+        </script>
+
+        
+        <script>
+
+            // epi: http://world.episerver.com/documentation/Items/Developers-Guide/EPiServer-Find/8/Searching-With-Javascript/Autocomplete/
+
+            //http://deanhume.com/home/blogpost/twitter-bootstrap-typeahead-and-asp-net-mvc---key-value-pairs/88
+            //https://www.google.com/?gws_rd=ssl#q=bootstrap%20cdn%20typeahead
+            //https://twitter.github.io/typeahead.js/examples/
+            //http://world.episerver.com/documentation/Items/Developers-Guide/EPiServer-Find/8/Searching-With-Javascript/Autocomplete/
+            //https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //
+            //    Global search + 404 page not found
+            //
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+            $(function () {
+                var options = {
+                    hint: true,
+                    highlight: true,
+                    minLength: 2
+                };
+
+                var settings = {
+                    source: function (request, response) {
+                        var wildcard = { "wildcard": { "Title$$string.lowercase": "*" + request + "*" } };
+                        var fields = ["Title$$string"];
+                        var postData = {
+                            "query": wildcard,
+                            "fields": fields,
+                            "filter": {
+                                "term": { "Findable$$bool": "true" }
+                            }
+                        };
+
+                        $.ajax({
+                            url: EPiSERVER_FIND_URL, // declared in _Root.cshtml
+                            type: "POST",
+                            dataType: "json",
+                            data: JSON.stringify(postData),
+                            success: function (data) {
+                                response($.map(data.hits.hits, function (item) {
+                                    return {
+                                        label: item.fields.Title$$string,
+                                        value: item.fields.Title$$string
+                                    };
+                                }));
+                            }
+                        });
+                    }
+                };
+
+                $("#search404").typeahead(options, settings)
+                    .on('typeahead:selected', function (event, selectedObject, dataset) {
+                        var text = '"' + $("#search404").val() + '"';
+                        $("#search404").val(text);
+                        $("#search404").closest("form").submit();
+                    });
+
+                $("#js-search--site__search__field--mob").typeahead(options, settings).typeahead(options, settings)
+                    .on('typeahead:selected', function (event, selectedObject, dataset) {
+                        var text = '"' + $("#js-search--site__search__field--mob").val() + '"';
+                        $("#js-search--site__search__field--mob").val(text);
+                        $("#js-search--site__search__field--mob").closest("form").submit();
+                    });
+
+                $("#js-search--site__search__field").typeahead(options, settings).typeahead(options, settings)
+                    .on('typeahead:selected', function (event, selectedObject, dataset) {
+                        var text = '"' + $("#js-search--site__search__field").val() + '"';
+                        $("#js-search--site__search__field").val(text);
+                        $("#js-search--site__search__field").closest("form").submit();
+                    });
+                $("#js-search--site__search__field").typeahead(options, settings).typeahead(options, settings)
+                    .on('typeahead:autocompleted', function (event, selectedObject, dataset) {
+                        var text = '"' + $("#js-search--site__search__field").val() + '"';
+                        $("#js-search--site__search__field").val(text);
+                    });
+
+            });
+            
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //
+            //    CourseListPage
+            //
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            $(function () {
+                var options = {
+                    hint: true,
+                    highlight: true,
+                    minLength: 2
+                };
+
+                var settings = {
+                    source: function(request, response) {
+                        var wildcard = { "wildcard": { "SearchTitle$$string.lowercase": "*" + request + "*" } };
+                        var fields = ["SearchTitle$$string"];
+                        var postData = {
+                            "query": wildcard,
+                            "fields": fields,
+                            "filter": {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "terms": { "$type": ["CGI.Delegate.Models.EPiServerFind.CourseWithMetaData, Delegate"] }
+                                        },
+                                        {
+                                            "term": { "Findable$$bool": "true" }
+                                        }
+                                    ]
+                                }
+                            }
+                        };
+
+                        $.ajax({
+                            url: EPiSERVER_FIND_URL, // declared in _Root.cshtml
+                            type: "POST",
+                            dataType: "json",
+                            data: JSON.stringify(postData),
+                            success: function(data) {
+                                response($.map(data.hits.hits, function(item) {
+                                    return {
+                                        label: item.fields.SearchTitle$$string,
+                                        value: item.fields.SearchTitle$$string
+                                    };
+                                }));
+                            }
+                        });
+                    }
+                };
+
+                $("#coursesearch").typeahead(options, settings).typeahead(options, settings).typeahead(options, settings)
+                    .on('typeahead:selected', function(event, selectedObject, dataset) {
+                        var text = '"' + $("#coursesearch").val() + '"';
+                        $("#coursesearch").val(text);
+                        $("#coursesearch").closest("form").submit();
+                    });
+
+                $("#coursesearch").typeahead(options, settings).typeahead(options, settings).typeahead(options, settings)
+                    .on('typeahead:autocompleted', function (event, selectedObject, dataset) {
+                        var text = '"' + $("#coursesearch").val() + '"';
+                        $("#coursesearch").val(text);     
+                });
+
+
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //
+                //    CoursePage.Enroll + CoursePage.MassEnroll
+                //
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                var companySettings = {
+                    source: function (request, response) {
+                        $.ajax({
+                            url: "/api/bedriftsnavn/" + request,
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item,
+                                        value: item
+                                    };
+                                }));
+                            }
+                        });
+                    }
+                };
+
+                $("#arbsted").typeahead(options, companySettings);
+                $("#fak-bedrift").typeahead(options, companySettings);
+                $("#bedrift").typeahead(options, companySettings);
+
+            });
+        </script>
+
+
+
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Event",
+    "name": "Prosjektering av st&#229;lkonstruksjoner for seismisk p&#229;virkning",
+    "startDate" : "20150507",
+    "description" : "Prosjektering av st&#229;lkonstruksjoner for seismisk p&#229;virkning i henhold til Eurokode 8 / NS-EN 1998, med eksempler p&#229; dimensjonering av bygninger i Norge med hensyn p&#229; jordskjelv.",
+    "location" :
+    {
+        "@type" : "Place",
+
+        "name" : "Felix Konferansesenter",
+        "address" :
+        {
+            "@type" : "PostalAddress",
+            "addressLocality" : "OSLO"
+        }
+    }
+
+}
+
+</script>
+
+    
+<script>
+    var BtnUrl = $(".js-signup-url");
+    var MobUrl = $("#js-get-signup-url");
+
+    MobUrl.prop('href', BtnUrl.prop('href'));
+    MobUrl.text(BtnUrl.text());
+</script>
+
+
+
+
+
+            
+
+    </body>
+</html>
+

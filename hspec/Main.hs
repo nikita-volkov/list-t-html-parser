@@ -5,6 +5,7 @@ import Test.Hspec
 import Conversion
 import Conversion.Text
 import Data.Text (Text)
+import qualified Data.Text.IO
 import qualified HTMLTokenizer.Parser
 import qualified ListT.Attoparsec
 import qualified ListT.HTMLParser
@@ -68,8 +69,11 @@ main =
                 return 2
       result <- parse parser text
       shouldBe result (Right 2)
-
-
+    context "HTML sample file #1" $ do
+      text <- runIO $ Data.Text.IO.readFile "hspec/samples/1.html"
+      context "Running the \"html\" parser on it" $ do
+        result <- runIO $ parse (P.token *> P.html) text
+        it "should not fail" $ shouldSatisfy result isRight
 
 parse :: ListT.HTMLParser.Parser IO a -> Text -> IO (Either Error a)
 parse parser =
