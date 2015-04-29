@@ -71,7 +71,6 @@ main =
 
 
 
--- | Scrape the body of a GET response using an HTML parser.
 parse :: ListT.HTMLParser.Parser IO a -> Text -> IO (Either Error a)
 parse parser =
   fmap (either (Left . parseSomeException) id) . try .
