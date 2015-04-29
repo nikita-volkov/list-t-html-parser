@@ -211,13 +211,17 @@ total a =
 -- e.g. it'll consume the input @\<a\>\<\/b\>\<\/a\>@ as @\<a\>\<\/a\>@.
 html :: Monad m => Parser m Text.Builder
 html =
-  enclosingTag <|> text' <|> comment' <|> brokenOpeningTag
+  enclosingTag <|> closedTag <|> text' <|> comment' <|> brokenOpeningTag
   where
     enclosingTag =
       do
         ot@(n, _, False) <- openingTag
         (chunks, ct) <- manyTill (brokenClosingTag <|> html) (closingTag >>= \n' -> guard (n' == n) $> n')
         return $ Renderer.openingTag ot <> mconcat chunks <> Renderer.closingTag ct
+    closedTag =
+      do
+        t@(_, _, True) <- openingTag
+        return $ Renderer.openingTag t
     brokenOpeningTag =
       Renderer.openingTag . repair <$> openingTag
       where
