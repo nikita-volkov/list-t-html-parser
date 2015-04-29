@@ -200,27 +200,30 @@ total a =
 -- >   <li>I'm not your friend, <b>buddy</b>!</li>
 -- 
 -- Notice that it's safe to assume 
--- that it will not consume the closing @\</ul\>@ tag,
+-- that it will not consume the closing @\<\/ul\>@ tag,
 -- because it does not begin a valid HTML-tree node.
 -- 
 -- Also notice that this parser is smart enough to consume the unclosed tags,
 -- interpreting them as closed singletons. 
--- E.g., @\<br\>@ will be consumed as @\<br/\>@.
+-- E.g., @\<br\>@ will be consumed as @\<br\/\>@.
+-- 
+-- It is also capable of handling the broken closed tags, 
+-- e.g. it'll consume the input @\<a\>\<\/b\>\<\/a\>@ as @\<a\>\<\/a\>@.
 html :: Monad m => Parser m Text.Builder
 html =
-  enclosingTag <|> brokenOpenTag <|> text' <|> comment'
+  enclosingTag <|> text' <|> comment' <|> brokenOpeningTag
   where
     enclosingTag =
       do
-        ot@(n, _, False) <- openingTag  
-        theHTML <- mconcat <$> many html
-        ct <- closingTag
-        guard $ ct == n
-        return $ Renderer.openingTag ot <> theHTML <> Renderer.closingTag ct
-    brokenOpenTag =
+        ot@(n, _, False) <- openingTag
+        (chunks, ct) <- manyTill (brokenClosingTag <|> html) (closingTag >>= \n' -> guard (n' == n) $> n')
+        return $ Renderer.openingTag ot <> mconcat chunks <> Renderer.closingTag ct
+    brokenOpeningTag =
       Renderer.openingTag . repair <$> openingTag
       where
         repair (name, attrs, _) = (name, attrs, True)
+    brokenClosingTag =
+      closingTag >> return mempty
     text' =
       Renderer.text <$> text
     comment' =

@@ -75,11 +75,26 @@ main =
         result <- runIO $ parse (P.html) text
         it "should not be failure" $ shouldSatisfy result isRight
         it "should be proper" $ shouldBe result (Right "<a><br/><br/></a>")
-    context "HTML sample file #1" $ do
-      text <- runIO $ Data.Text.IO.readFile "hspec/samples/1.html"
-      context "Running the \"html\" parser on it" $ do
-        result <- runIO $ parse (P.token *> P.html) text
-        it "should not fail" $ shouldSatisfy result isRight
+    context "HTML with deep tags" $ do
+      let text = "<a><a><br><br></a></a>"
+      context "\"html\" parser result" $ do
+        result <- runIO $ parse (P.html) text
+        it "should be proper" $ shouldBe result (Right "<a><a><br/><br/></a></a>")
+    context "Broken closing tag" $ do
+      let text = "<a></b></a>"
+      context "\"html\" parser result" $ do
+        result <- runIO $ parse P.html text
+        it "should be proper" $ shouldBe result (Right "<a></a>")
+    context "Interspersed tag ending" $ do
+      let text = "<a><b></a></b>"
+      context "\"html\" parser result" $ do
+        result <- runIO $ parse (mconcat <$> many P.html) text
+        it "should be proper" $ shouldBe result (Right "<a/><b></b>")
+    -- context "HTML sample file #1" $ do
+    --   text <- runIO $ Data.Text.IO.readFile "hspec/samples/1.html"
+    --   context "Running the \"html\" parser on it" $ do
+    --     result <- runIO $ parse (P.token *> P.html) text
+    --     it "should not fail" $ shouldSatisfy result isRight
 
 parse :: ListT.HTMLParser.Parser IO a -> Text -> IO (Either Error a)
 parse parser =
