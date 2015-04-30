@@ -12,6 +12,7 @@ module ListT.HTMLParser
   text,
   comment,
   html,
+  properHTML,
   -- * Combinators
   many1,
   manyTill,
@@ -187,18 +188,9 @@ total a =
 -- 
 -- > <li>I&#39;m not your friend, <b>buddy</b>!</li>
 -- 
--- If you want to consume all children of a node, 
--- use it in combination with 'many' or 'many1'. 
--- E.g., the following parser:
--- 
--- > openingTag *> (mconcat <$> many html)
--- 
--- will produce a merged text builder, which consists of the following nodes:
--- 
--- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
--- >   <li>I&#39;m not your buddy, <b>guy</b>!</li>
--- >   <li>He&#39;s not your guy, <b>friend</b>!</li>
--- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
+-- If you want to consume all children of a node,
+-- it's recommended to use 'properHTML' in combination with 'many' or 'many1'.
+-- For details consult the docs on 'properHTML'.
 -- 
 -- __This parser is smart and handles and repairs broken HTML__:
 -- 
@@ -210,30 +202,68 @@ total a =
 -- E.g. it'll consume the input @\<a\>\<\/b\>\<\/a\>@ as @\<a\>\<\/a\>@.
 html :: Monad m => Parser m Text.Builder
 html =
-  flip fmap cleanStream $ foldl' (flip mappend) mempty . map Renderer.token
+  flip fmap cleanTokenSequence $ 
+  foldl' (flip mappend) mempty . map Renderer.token
+
+-- |
+-- Same as 'html', but fails if the input begins with an orphan closing tag.
+-- I.e., the input \"\<\/a\>\<b\>\<\/b\>\" will make this parser fail.
+-- 
+-- This parser is particularly useful for consuming all children in the current context.
+-- E.g., running the following parser:
+-- 
+-- > openingTag *> (mconcat <$> many properHTML)
+-- 
+-- on the following input:
+-- 
+-- > <ul>
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- >   <li>I'm not your buddy, <b>guy</b>!</li>
+-- >   <li>He's not your guy, <b>friend</b>!</li>
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- > </ul>
+-- 
+-- will produce a merged text builder, which consists of the following nodes:
+-- 
+-- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
+-- >   <li>I&#39;m not your buddy, <b>guy</b>!</li>
+-- >   <li>He&#39;s not your guy, <b>friend</b>!</li>
+-- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
+-- 
+-- Notice that unlike with 'html', it's safe to assume 
+-- that it will not consume the following closing @\<\/ul\>@ tag,
+-- because it does not begin a valid HTML-tree node.
+-- 
+-- Notice also that despite failing in case of the first broken token,
+-- this parser handles the broken tokens in other cases the same way as 'html'.
+properHTML :: Monad m => Parser m Text.Builder
+properHTML =
+  cleanTokenSequence >>= \case
+    [] -> throwError $ Just $ ErrorDetails_Message "Improper HTML node"
+    l -> return $ foldl' (flip mappend) mempty $ map Renderer.token l
+
+cleanTokenSequence :: Monad m => Parser m [HT.Token]
+cleanTokenSequence =
+  fmap (fmap (either id id)) $
+  flip execStateT [] $ fix $ \loop -> lift token >>= \case
+    HT.Token_ClosingTag ct -> do
+      ours <- state $ \list -> fromMaybe ([], list) $ do
+        (l, r) <- Just $ flip break list $ \case
+          Right (HT.Token_OpeningTag (n, _, False)) -> n == ct
+          _ -> False
+        (h, t) <- uncons r
+        return (fmap (fmap closeOpeningTag) l <> [h], t)
+      loop' <- bool loop (return ()) . null <$> get
+      if null ours
+        then loop'
+        else do
+          modify $ mappend $ (:) (Left (HT.Token_ClosingTag ct)) $ fmap (either Left Left) $ ours
+          loop'
+    t -> do
+      modify $ (:) $ Right t
+      loop
   where
-    cleanStream :: Monad m => Parser m [HT.Token]
-    cleanStream =
-      fmap (fmap (either id id)) $
-      flip execStateT [] $ fix $ \loop -> lift token >>= \case
-        HT.Token_ClosingTag ct -> do
-          ours <- state $ \list -> fromMaybe ([], list) $ do
-            (l, r) <- Just $ flip break list $ \case
-              Right (HT.Token_OpeningTag (n, _, False)) -> n == ct
-              _ -> False
-            (h, t) <- uncons r
-            return (fmap (fmap closeOpeningTag) l <> [h], t)
-          loop' <- bool loop (return ()) . null <$> get
-          if null ours
-            then loop
-            else do
-              modify $ mappend $ (:) (Left (HT.Token_ClosingTag ct)) $ fmap (either Left Left) $ ours
-              loop'
-        t -> do
-          modify $ (:) $ Right t
-          loop
-      where
-        closeOpeningTag =
-          \case
-            HT.Token_OpeningTag (n, a, _) -> HT.Token_OpeningTag (n, a, True)
-            x -> x
+    closeOpeningTag =
+      \case
+        HT.Token_OpeningTag (n, a, _) -> HT.Token_OpeningTag (n, a, True)
+        x -> x

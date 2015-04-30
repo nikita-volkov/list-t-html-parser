@@ -107,6 +107,10 @@ main =
       let text = "<p>a<strong>b</strong>c<br><br>d<br>"
       result <- runIO $ parse (mconcat <$> many P.html) text
       it "should be correct" $ shouldBe result (Right "")
+    context "Closing tag comming first" $ do
+      let text = "</a><b></b>"
+      result <- runIO $ parse P.properHTML text
+      it "should fail" $ shouldSatisfy result isLeft
     context "HTML sample file #1" $ do
       text <- runIO $ Data.Text.IO.readFile "hspec/samples/1.html"
       it "should parse fine" $ do
@@ -119,7 +123,7 @@ main =
           Right result <- parse (P.openingTag *> P.html) text
           shouldBe result "<li>I&#39;m not your friend, <b>buddy</b>!</li>"
         it "Multiple" $ do
-          Right result <- parse (P.openingTag *> (mconcat <$> many P.html)) text
+          Right result <- parse (P.openingTag *> (mconcat <$> many P.properHTML) <* P.closingTag) text
           shouldBe result "<li>I&#39;m not your friend, <b>buddy</b>!</li><li>I&#39;m not your buddy, <b>guy</b>!</li><li>He&#39;s not your guy, <b>friend</b>!</li><li>I&#39;m not your friend, <b>buddy</b>!</li>"
 
 parse :: ListT.HTMLParser.Parser IO a -> Text -> IO (Either Error a)
