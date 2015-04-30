@@ -75,11 +75,16 @@ main =
         result <- runIO $ parse (P.html) text
         it "should not be failure" $ shouldSatisfy result isRight
         it "should be proper" $ shouldBe result (Right "<a><br/><br/></a>")
-    context "HTML with deep tags" $ do
-      let text = "<a><a><br><br></a></a>"
+    context "HTML with deep unclosed tags" $ do
+      let text = "<a><b><br><br></b></a>"
       context "\"html\" parser result" $ do
         result <- runIO $ parse (P.html) text
-        it "should be proper" $ shouldBe result (Right "<a><a><br/><br/></a></a>")
+        it "should be proper" $ shouldBe result (Right "<a><b><br/><br/></b></a>")
+    context "HTML with repetitive tags" $ do
+      let text = "<a><a></a></a>"
+      context "\"html\" parser result" $ do
+        result <- runIO $ parse (P.html) text
+        it "should be proper" $ shouldBe result (Right "<a><a></a></a>")
     context "Broken closing tag" $ do
       let text = "<a></b></a>"
       context "\"html\" parser result" $ do
@@ -89,12 +94,33 @@ main =
       let text = "<a><b></a></b>"
       context "\"html\" parser result" $ do
         result <- runIO $ parse (mconcat <$> many P.html) text
-        it "should be proper" $ shouldBe result (Right "<a/><b></b>")
-    -- context "HTML sample file #1" $ do
-    --   text <- runIO $ Data.Text.IO.readFile "hspec/samples/1.html"
-    --   context "Running the \"html\" parser on it" $ do
-    --     result <- runIO $ parse (P.token *> P.html) text
-    --     it "should not fail" $ shouldSatisfy result isRight
+        it "should be proper" $ shouldBe result (Right "<a><b/></a>")
+    context "Complex HTML" $ do
+      let text = "<p>a<strong>b</strong>c<br><br>d<br></p>"
+      result <- runIO $ parse (mconcat <$> many P.html) text
+      it "should be correct" $ shouldBe result (Right "<p>a<strong>b</strong>c<br/><br/>d<br/></p>")
+    context "Complex HTML 2" $ do
+      let text = "<a><b>c</b><d><e>f<g><h>i<j>k</j><l></a>"
+      result <- runIO $ parse (mconcat <$> many P.html) text
+      it "should be correct" $ shouldBe result (Right "<a><b>c</b><d/><e/>f<g/><h/>i<j>k</j><l/></a>")
+    context "Unclosed HTML" $ do
+      let text = "<p>a<strong>b</strong>c<br><br>d<br>"
+      result <- runIO $ parse (mconcat <$> many P.html) text
+      it "should be correct" $ shouldBe result (Right "")
+    context "HTML sample file #1" $ do
+      text <- runIO $ Data.Text.IO.readFile "hspec/samples/1.html"
+      it "should parse fine" $ do
+        result <- parse (mconcat <$> many P.html) text
+        shouldSatisfy result isRight
+    context "Doc examples" $ do
+      context "I'm not your guy" $ do
+        let text = "<ul><li>I'm not your friend, <b>buddy</b>!</li><li>I'm not your buddy, <b>guy</b>!</li><li>He's not your guy, <b>friend</b>!</li><li>I'm not your friend, <b>buddy</b>!</li></ul>"
+        it "Single" $ do
+          Right result <- parse (P.openingTag *> P.html) text
+          shouldBe result "<li>I&#39;m not your friend, <b>buddy</b>!</li>"
+        it "Multiple" $ do
+          Right result <- parse (P.openingTag *> (mconcat <$> many P.html)) text
+          shouldBe result "<li>I&#39;m not your friend, <b>buddy</b>!</li><li>I&#39;m not your buddy, <b>guy</b>!</li><li>He&#39;s not your guy, <b>friend</b>!</li><li>I&#39;m not your friend, <b>buddy</b>!</li>"
 
 parse :: ListT.HTMLParser.Parser IO a -> Text -> IO (Either Error a)
 parse parser =

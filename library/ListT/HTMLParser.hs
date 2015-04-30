@@ -20,7 +20,7 @@ module ListT.HTMLParser
 )
 where
 
-import BasePrelude hiding (uncons, cons)
+import BasePrelude
 import MTLPrelude hiding (Error, shift)
 import Control.Monad.Trans.Either hiding (left, right)
 import ListT (ListT)
@@ -166,13 +166,13 @@ total a =
   a <* eoi
 
 -- |
--- The textual HTML representation of a proper HTML-tree node.
+-- The auto-repaired textual HTML representation of an HTML-tree node.
 -- 
 -- Useful for consuming HTML-formatted snippets.
 -- 
 -- E.g., when the following parser:
 -- 
--- > openingTag >> html
+-- > openingTag *> html
 -- 
 -- is run against the following HTML snippet:
 -- 
@@ -185,51 +185,55 @@ total a =
 -- 
 -- it'll produce the following text builder value:
 -- 
--- > <li>I'm not your friend, <b>buddy</b>!</li>
+-- > <li>I&#39;m not your friend, <b>buddy</b>!</li>
 -- 
 -- If you want to consume all children of a node, 
--- use it in combination with 'many' or 'many1'. E.g., the following parser:
+-- use it in combination with 'many' or 'many1'. 
+-- E.g., the following parser:
 -- 
 -- > openingTag *> (mconcat <$> many html)
 -- 
 -- will produce a merged text builder, which consists of the following nodes:
 -- 
--- >   <li>I'm not your friend, <b>buddy</b>!</li>
--- >   <li>I'm not your buddy, <b>guy</b>!</li>
--- >   <li>He's not your guy, <b>friend</b>!</li>
--- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
+-- >   <li>I&#39;m not your buddy, <b>guy</b>!</li>
+-- >   <li>He&#39;s not your guy, <b>friend</b>!</li>
+-- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
 -- 
--- Notice that it's safe to assume 
--- that it will not consume the closing @\<\/ul\>@ tag,
--- because it does not begin a valid HTML-tree node.
+-- __This parser is smart and handles and repairs broken HTML__:
 -- 
--- Also notice that this parser is smart enough to consume the unclosed tags,
+-- * It repairs unclosed tags,
 -- interpreting them as closed singletons. 
 -- E.g., @\<br\>@ will be consumed as @\<br\/\>@.
 -- 
--- It is also capable of handling the broken closed tags, 
--- e.g. it'll consume the input @\<a\>\<\/b\>\<\/a\>@ as @\<a\>\<\/a\>@.
+-- * It handles orphan closing tags by ignoring them.
+-- E.g. it'll consume the input @\<a\>\<\/b\>\<\/a\>@ as @\<a\>\<\/a\>@.
 html :: Monad m => Parser m Text.Builder
 html =
-  enclosingTag <|> closedTag <|> text' <|> comment' <|> brokenOpeningTag
+  flip fmap cleanStream $ foldl' (flip mappend) mempty . map Renderer.token
   where
-    enclosingTag =
-      do
-        ot@(n, _, False) <- openingTag
-        (chunks, ct) <- manyTill (brokenClosingTag <|> html) (closingTag >>= \n' -> guard (n' == n) $> n')
-        return $ Renderer.openingTag ot <> mconcat chunks <> Renderer.closingTag ct
-    closedTag =
-      do
-        t@(_, _, True) <- openingTag
-        return $ Renderer.openingTag t
-    brokenOpeningTag =
-      Renderer.openingTag . repair <$> openingTag
+    cleanStream :: Monad m => Parser m [HT.Token]
+    cleanStream =
+      fmap (fmap (either id id)) $
+      flip execStateT [] $ fix $ \loop -> lift token >>= \case
+        HT.Token_ClosingTag ct -> do
+          ours <- state $ \list -> fromMaybe ([], list) $ do
+            (l, r) <- Just $ flip break list $ \case
+              Right (HT.Token_OpeningTag (n, _, False)) -> n == ct
+              _ -> False
+            (h, t) <- uncons r
+            return (fmap (fmap closeOpeningTag) l <> [h], t)
+          loop' <- bool loop (return ()) . null <$> get
+          if null ours
+            then loop
+            else do
+              modify $ mappend $ (:) (Left (HT.Token_ClosingTag ct)) $ fmap (either Left Left) $ ours
+              loop'
+        t -> do
+          modify $ (:) $ Right t
+          loop
       where
-        repair (name, attrs, _) = (name, attrs, True)
-    brokenClosingTag =
-      closingTag >> return mempty
-    text' =
-      Renderer.text <$> text
-    comment' =
-      Renderer.comment <$> comment
-
+        closeOpeningTag =
+          \case
+            HT.Token_OpeningTag (n, a, _) -> HT.Token_OpeningTag (n, a, True)
+            x -> x
