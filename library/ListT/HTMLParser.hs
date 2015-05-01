@@ -259,9 +259,15 @@ cleanTokenSequence =
         else do
           modify $ mappend $ (:) (Left (HT.Token_ClosingTag ct)) $ fmap (either Left Left) $ ours
           loop'
-    t -> do
+    t@(HT.Token_OpeningTag _) -> do
       modify $ (:) $ Right t
       loop
+    t -> do
+      context <- get
+      modify $ (:) $ Right t
+      if null context
+        then return ()
+        else loop
   where
     closeOpeningTag =
       \case

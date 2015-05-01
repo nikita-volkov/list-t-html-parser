@@ -15,6 +15,12 @@ import qualified ListT.HTMLParser as P
 
 main =
   hspec $ do
+    it "html consumes text" $ do
+      result <- parse P.html "a<br/>"
+      shouldBe result (Right "a")
+    it "html consumes comment" $ do
+      result <- parse P.html "<!--a-->b"
+      shouldBe result (Right "<!--a-->")
     it "Backtracking" $ do
       let 
         text = "<a><b></b></a>"
