@@ -15,6 +15,12 @@ import qualified ListT.HTMLParser as P
 
 main =
   hspec $ do
+    it "text with spaces gets ignored" $ do
+      result <- parse (P.openingTag *> P.closingTag) "<a>   </a>"
+      shouldSatisfy result isRight
+    it "text gets trimmed" $ do
+      result <- parse (P.openingTag *> P.text <* P.closingTag) "<a>  b </a>"
+      shouldBe result (Right "b")
     it "html consumes text" $ do
       result <- parse P.html "a<br/>"
       shouldBe result (Right "a")
@@ -127,10 +133,10 @@ main =
         let text = "<ul><li>I'm not your friend, <b>buddy</b>!</li><li>I'm not your buddy, <b>guy</b>!</li><li>He's not your guy, <b>friend</b>!</li><li>I'm not your friend, <b>buddy</b>!</li></ul>"
         it "Single" $ do
           Right result <- parse (P.openingTag *> P.html) text
-          shouldBe result "<li>I&#39;m not your friend, <b>buddy</b>!</li>"
+          shouldBe result "<li>I'm not your friend, <b>buddy</b>!</li>"
         it "Multiple" $ do
           Right result <- parse (P.openingTag *> (mconcat <$> many P.properHTML) <* P.closingTag) text
-          shouldBe result "<li>I&#39;m not your friend, <b>buddy</b>!</li><li>I&#39;m not your buddy, <b>guy</b>!</li><li>He&#39;s not your guy, <b>friend</b>!</li><li>I&#39;m not your friend, <b>buddy</b>!</li>"
+          shouldBe result "<li>I'm not your friend, <b>buddy</b>!</li><li>I'm not your buddy, <b>guy</b>!</li><li>He's not your guy, <b>friend</b>!</li><li>I'm not your friend, <b>buddy</b>!</li>"
 
 parse :: ListT.HTMLParser.Parser IO a -> Text -> IO (Either Error a)
 parse parser =

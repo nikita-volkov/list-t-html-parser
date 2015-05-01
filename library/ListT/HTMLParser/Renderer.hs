@@ -1,36 +1,37 @@
 module ListT.HTMLParser.Renderer where
 
 import BasePrelude hiding (fromString)
+import Conversion
+import Conversion.Text
 import Data.Text (Text)
 import Data.Text.Lazy.Builder
-import HTMLTokenizer.Parser (Token(..), OpeningTag, ClosingTag, Attribute)
+import HTMLTokenizer.Parser (Token(..), OpeningTag, Identifier, Attribute)
 import qualified Data.CaseInsensitive as CI
-import qualified HTMLEntities.Builder
 
 
 openingTag :: OpeningTag -> Builder
 openingTag (name, attrs, closed) =
   singleton '<' <>
-  ciText name <>
+  identifier name <>
   mconcat (map (mappend (singleton ' ') . attribute) attrs) <>
   bool (singleton '>') (fromString "/>") closed
 
 attribute :: Attribute -> Builder
 attribute (name, value) =
-  maybe id (flip mappend . mappend (fromString "=\"") . flip mappend (singleton '"') . HTMLEntities.Builder.text) value $
-  ciText name
+  maybe id (flip mappend . mappend (fromString "=\"") . flip mappend (singleton '"') . convert) value $
+  identifier name
 
-ciText :: CI.CI Text -> Builder
-ciText =
-  HTMLEntities.Builder.text . CI.foldedCase  
+identifier :: Identifier -> Builder
+identifier =
+  convert . CI.foldedCase  
 
-closingTag :: ClosingTag -> Builder
+closingTag :: Identifier -> Builder
 closingTag name =
-  fromString "</" <> ciText name <> singleton '>'
+  fromString "</" <> identifier name <> singleton '>'
 
 text :: Text -> Builder
 text =
-  HTMLEntities.Builder.text
+  convert
 
 comment :: Text -> Builder
 comment content =

@@ -7,6 +7,8 @@ module ListT.HTMLParser
   -- * Parsers
   eoi,
   token,
+  rawToken,
+  space,
   openingTag,
   closingTag,
   text,
@@ -26,10 +28,14 @@ import MTLPrelude hiding (Error, shift)
 import Control.Monad.Trans.Either hiding (left, right)
 import ListT (ListT)
 import Data.Text (Text)
+import Conversion
+import Conversion.Text
+import qualified Data.Text as Text
 import qualified Data.Text.Lazy.Builder as Text (Builder)
 import qualified Data.Text.Lazy.Builder as Text.Builder
 import qualified ListT as L
 import qualified HTMLTokenizer.Parser as HT
+import qualified HTMLEntities.Decoder
 import qualified ListT.HTMLParser.Renderer as Renderer
 
 
@@ -88,22 +94,52 @@ run p l =
   flip evalStateT (l, []) $ runEitherT $ unwrap $ p
 
 -- |
--- End of input.
-eoi :: Monad m => Parser m ()
-eoi =
-  token $> () <|> pure ()
-
--- |
--- Any HTML token.
-token :: Monad m => Parser m HT.Token
-token =
+-- An HTML token as it is: without HTML-decoding and ignoring of spaces.
+rawToken :: Monad m => Parser m HT.Token
+rawToken =
   Parser $ EitherT $ StateT $ \(incoming, backtrack) -> 
   liftM (maybe (Left (Just ErrorDetails_EOI), (incoming, backtrack)) 
                (\(a, incoming') -> (Right a, (incoming', a : backtrack)))) $ 
   L.uncons incoming
 
 -- |
--- An opening tag.
+-- A token with HTML entities decoded and with spaces filtered out.
+token :: Monad m => Parser m HT.Token
+token =
+  rawToken >>= \case
+    HT.Token_Text x -> Text.strip x & \x -> if Text.null x 
+      then token 
+      else fmap (HT.Token_Text . convert) $ decodeEntities x
+    HT.Token_Comment x -> fmap (HT.Token_Comment . convert) $ decodeEntities x
+    HT.Token_OpeningTag (name, attrs, closed) -> 
+      fmap HT.Token_OpeningTag $
+        (,,) <$> 
+          pure name <*> 
+          (traverse . traverse . traverse) ((fmap . fmap) convert decodeEntities) attrs <*> 
+          pure closed
+    x -> return x
+  where
+    decodeEntities =
+      either (throwError . Just . ErrorDetails_Message . convert) return .
+      HTMLEntities.Decoder.htmlEncodedText
+
+-- |
+-- A text token, which is completely composed of characters,
+-- which satisfy the 'isSpace' predicate.
+space :: Monad m => Parser m Text
+space =
+  rawToken >>= \case
+    HT.Token_Text x | Text.all isSpace x -> return x
+    _ -> throwError (Just ErrorDetails_UnexpectedToken)
+
+-- |
+-- End of input.
+eoi :: Monad m => Parser m ()
+eoi =
+  rawToken $> () <|> pure ()
+
+-- |
+-- An opening tag with HTML entities in values decoded.
 openingTag :: Monad m => Parser m HT.OpeningTag
 openingTag =
   token >>= \case
@@ -112,14 +148,14 @@ openingTag =
 
 -- |
 -- A closing tag.
-closingTag :: Monad m => Parser m HT.ClosingTag
+closingTag :: Monad m => Parser m HT.Identifier
 closingTag =
   token >>= \case
     HT.Token_ClosingTag x -> return x
     _ -> throwError (Just ErrorDetails_UnexpectedToken)
 
 -- |
--- A text between tags with HTML-entities decoded.
+-- A text between tags with HTML entities decoded.
 text :: Monad m => Parser m Text
 text =
   token >>= \case
@@ -154,7 +190,7 @@ manyTill a b =
 skipTill :: Monad m => Parser m a -> Parser m a
 skipTill a =
   fix $ \loop ->
-    a <|> (token *> loop)
+    a <|> (rawToken *> loop)
 
 -- |
 -- Greedily consume all the input until the end,
@@ -186,7 +222,7 @@ total a =
 -- 
 -- it'll produce the following text builder value:
 -- 
--- > <li>I&#39;m not your friend, <b>buddy</b>!</li>
+-- > <li>I'm not your friend, <b>buddy</b>!</li>
 -- 
 -- If you want to consume all children of a node,
 -- it's recommended to use 'properHTML' in combination with 'many' or 'many1'.
@@ -225,10 +261,10 @@ html =
 -- 
 -- will produce a merged text builder, which consists of the following nodes:
 -- 
--- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
--- >   <li>I&#39;m not your buddy, <b>guy</b>!</li>
--- >   <li>He&#39;s not your guy, <b>friend</b>!</li>
--- >   <li>I&#39;m not your friend, <b>buddy</b>!</li>
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
+-- >   <li>I'm not your buddy, <b>guy</b>!</li>
+-- >   <li>He's not your guy, <b>friend</b>!</li>
+-- >   <li>I'm not your friend, <b>buddy</b>!</li>
 -- 
 -- Notice that unlike with 'html', it's safe to assume 
 -- that it will not consume the following closing @\<\/ul\>@ tag,
@@ -245,7 +281,7 @@ properHTML =
 cleanTokenSequence :: Monad m => Parser m [HT.Token]
 cleanTokenSequence =
   fmap (fmap (either id id)) $
-  flip execStateT [] $ fix $ \loop -> lift token >>= \case
+  flip execStateT [] $ fix $ \loop -> lift rawToken >>= \case
     HT.Token_ClosingTag ct -> do
       ours <- state $ \list -> fromMaybe ([], list) $ do
         (l, r) <- Just $ flip break list $ \case

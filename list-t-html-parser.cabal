@@ -1,7 +1,7 @@
 name:
   list-t-html-parser
 version:
-  0.3.0.1
+  0.4.0.0
 synopsis:
   Streaming HTML parser
 category:
@@ -50,8 +50,11 @@ library
     Haskell2010
   build-depends:
     list-t == 0.4.*,
-    html-tokenizer >= 0.2.1 && < 0.3,
+    html-tokenizer >= 0.3 && < 0.4,
     html-entities >= 1.0.1 && < 1.2,
+    conversion == 1.*,
+    conversion-text == 1.*,
+    conversion-case-insensitive == 1.*,
     case-insensitive == 1.2.*,
     text >= 1 && < 1.3,
     either == 4.*,
