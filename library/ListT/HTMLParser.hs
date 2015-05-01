@@ -115,13 +115,16 @@ token =
       fmap HT.Token_OpeningTag $
         (,,) <$> 
           pure name <*> 
-          (traverse . traverse . traverse) ((fmap . fmap) convert decodeEntities) attrs <*> 
+          (traverse . traversePair . traverse) ((fmap . fmap) convert decodeEntities) attrs <*> 
           pure closed
     x -> return x
   where
     decodeEntities =
       either (throwError . Just . ErrorDetails_Message . convert) return .
       HTMLEntities.Decoder.htmlEncodedText
+    traversePair :: Functor f => (a -> f b) -> (c, a) -> f (c, b)
+    traversePair f (x, y) = (,) x <$> f y
+
 
 -- |
 -- A text token, which is completely composed of characters,
