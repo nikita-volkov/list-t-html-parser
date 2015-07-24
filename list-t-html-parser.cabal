@@ -80,10 +80,11 @@ test-suite hspec
   build-depends:
     hspec == 2.1.*,
     list-t-html-parser,
-    list-t-attoparsec == 0.2.*,
+    list-t-attoparsec == 0.4.*,
     list-t-text == 0.2.*,
     html-tokenizer,
     conversion == 1.*,
     conversion-text == 1.*,
+    either == 4.*,
     text == 1.*,
     base-prelude

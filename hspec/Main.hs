@@ -4,6 +4,7 @@ import BasePrelude
 import Test.Hspec
 import Conversion
 import Conversion.Text
+import Control.Monad.Trans.Either
 import Data.Text (Text)
 import qualified Data.Text.IO
 import qualified HTMLTokenizer.Parser
@@ -138,20 +139,17 @@ main =
           Right result <- parse (P.openingTag *> (mconcat <$> many P.properHTML) <* P.closingTag) text
           shouldBe result "<li>I'm not your friend, <b>buddy</b>!</li><li>I'm not your buddy, <b>guy</b>!</li><li>He's not your guy, <b>friend</b>!</li><li>I'm not your friend, <b>buddy</b>!</li>"
 
-parse :: ListT.HTMLParser.Parser IO a -> Text -> IO (Either Error a)
+parse :: (forall m. Monad m => ListT.HTMLParser.Parser m a) -> Text -> IO (Either Error a)
 parse parser =
-  fmap (either (Left . parseSomeException) id) . try .
+  fmap (either (Left . Error_Lexing) id) . runEitherT .
   fmap (either (Left . Error_Parsing) Right) .
-  ListT.HTMLParser.run parser . ListT.Attoparsec.textParser HTMLTokenizer.Parser.token . 
+  ListT.HTMLParser.run parser . 
+  ListT.Attoparsec.stream HTMLTokenizer.Parser.token . 
   ListT.Text.stream 2
-  where
-    parseSomeException e =
-      fromMaybe (error $ showString "Unexpected exception: " $ shows e $ "") $
-        Error_Lexing <$> fromException e
 
 data Error =
   -- | A tokenization failure
-  Error_Lexing ListT.Attoparsec.ParsingFailure |
+  Error_Lexing ListT.Attoparsec.Error |
   -- | A token-stream parsing failure
   Error_Parsing ListT.HTMLParser.Error
   deriving (Show, Eq)
