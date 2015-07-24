@@ -85,5 +85,5 @@ test-suite hspec
     html-tokenizer,
     conversion == 1.*,
     conversion-text == 1.*,
-    text,
+    text == 1.*,
     base-prelude
