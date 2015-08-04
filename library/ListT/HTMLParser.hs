@@ -15,7 +15,6 @@ module ListT.HTMLParser
   comment,
   html,
   properHTML,
-  properHTMLText,
   xmlNode,
   -- * Combinators
   many1,
@@ -283,17 +282,6 @@ properHTML =
   cleanTokenSequence >>= \case
     [] -> throwError $ Just $ ErrorDetails_Message "Improper HTML node"
     l -> return $ foldl' (flip mappend) mempty $ map Renderer.token l
-
--- |
--- Works the same way as 'properHTML', but aggregates only the contents of the text-tokens.
-properHTMLText :: Monad m => Parser m Text.Builder
-properHTMLText =
-  cleanTokenSequence >>= \case
-    [] -> throwError $ Just $ ErrorDetails_Message "Improper HTML node"
-    l -> return $ foldl' (flip mappend) mempty $ intersperse " " $ do
-      l >>= \case
-        HT.Token_Text t -> return $ convert t
-        _ -> []
 
 -- |
 -- Works the same way as 'properHTML', but constructs an XML-tree.
