@@ -40,5 +40,5 @@ node =
       return (XML.NodeElement (XML.Element (convertIdent ident) (fmap convertAttribute attrs) subnodes))
     _ -> mzero
   where
-    convertIdent ident = XML.Name (convert ident) Nothing Nothing
+    convertIdent (Tokenizer.Identifier namespace name) = XML.Name (convert name) (fmap convert namespace) Nothing
     convertAttribute (ident, content) = (convertIdent ident, convert (fmap XML.ContentEntity content))

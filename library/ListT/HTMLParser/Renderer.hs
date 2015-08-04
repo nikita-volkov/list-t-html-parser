@@ -5,7 +5,7 @@ import Conversion
 import Conversion.Text
 import Data.Text (Text)
 import Data.Text.Lazy.Builder
-import HTMLTokenizer (Token(..), OpeningTag, Identifier, Attribute)
+import HTMLTokenizer (Token(..), OpeningTag, Identifier(..), Attribute)
 import qualified Data.CaseInsensitive as CI
 
 
@@ -22,8 +22,8 @@ attribute (name, value) =
   identifier name
 
 identifier :: Identifier -> Builder
-identifier =
-  convert . CI.foldedCase  
+identifier (Identifier namespace name) =
+  foldMap (flip mappend ":" . convert . CI.foldedCase) namespace <> (convert . CI.foldedCase) name
 
 closingTag :: Identifier -> Builder
 closingTag name =
