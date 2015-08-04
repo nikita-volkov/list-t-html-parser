@@ -111,21 +111,13 @@ token =
   rawToken >>= \case
     HT.Token_Text x -> Text.strip x & \x -> if Text.null x 
       then token 
-      else fmap (HT.Token_Text . convert) $ decodeEntities x
-    HT.Token_Comment x -> fmap (HT.Token_Comment . convert) $ decodeEntities x
+      else return $ HT.Token_Text $ convert $ decode x
+    HT.Token_Comment x -> return $ HT.Token_Comment $ convert $ decode x
     HT.Token_OpeningTag (name, attrs, closed) -> 
-      fmap HT.Token_OpeningTag $
-        (,,) <$> 
-          pure name <*> 
-          (traverse . traversePair . traverse) ((fmap . fmap) convert decodeEntities) attrs <*> 
-          pure closed
+      return $ HT.Token_OpeningTag $ (name, ((fmap . fmap . fmap) (convert . decode) attrs), closed)
     x -> return x
   where
-    decodeEntities =
-      either (throwError . Just . ErrorDetails_Message . convert) return .
-      HTMLEntities.Decoder.htmlEncodedText
-    traversePair :: Functor f => (a -> f b) -> (c, a) -> f (c, b)
-    traversePair f (x, y) = (,) x <$> f y
+    decode = HTMLEntities.Decoder.htmlEncodedText
 
 
 -- |
