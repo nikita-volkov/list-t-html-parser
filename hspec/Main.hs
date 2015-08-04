@@ -8,7 +8,7 @@ import Control.Monad.Trans.Either
 import Data.Text (Text)
 import qualified Data.XML.Types as XML
 import qualified Data.Text.IO
-import qualified HTMLTokenizer.Parser
+import qualified HTMLTokenizer
 import qualified ListT.Attoparsec
 import qualified ListT.HTMLParser
 import qualified ListT.Text
@@ -161,7 +161,7 @@ parse parser =
   fmap (either (Left . Error_Lexing) id) . runEitherT .
   fmap (either (Left . Error_Parsing) Right) .
   ListT.HTMLParser.run parser . 
-  ListT.Attoparsec.stream HTMLTokenizer.Parser.token . 
+  ListT.Attoparsec.stream HTMLTokenizer.token . 
   ListT.Text.stream 2
 
 data Error =

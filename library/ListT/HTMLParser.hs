@@ -35,7 +35,7 @@ import qualified Data.Text as Text
 import qualified Data.Text.Lazy.Builder as Text (Builder)
 import qualified Data.Text.Lazy.Builder as Text.Builder
 import qualified ListT as L
-import qualified HTMLTokenizer.Parser as HT
+import qualified HTMLTokenizer as HT
 import qualified HTMLEntities.Decoder
 import qualified ListT.HTMLParser.Renderer as Renderer
 import qualified ListT.HTMLParser.XML as XML

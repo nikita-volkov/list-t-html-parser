@@ -5,7 +5,7 @@ import Conversion
 import Conversion.Text
 import Data.Text (Text)
 import Data.Text.Lazy.Builder
-import HTMLTokenizer.Parser (Token(..), OpeningTag, Identifier, Attribute)
+import HTMLTokenizer (Token(..), OpeningTag, Identifier, Attribute)
 import qualified Data.CaseInsensitive as CI
 
 

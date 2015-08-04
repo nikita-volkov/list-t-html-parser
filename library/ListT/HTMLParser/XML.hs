@@ -2,7 +2,7 @@ module ListT.HTMLParser.XML where
 
 import ListT.HTMLParser.Prelude
 import qualified Data.XML.Types as XML
-import qualified HTMLTokenizer.Parser as Tokenizer
+import qualified HTMLTokenizer as Tokenizer
 
 
 type Parser a =

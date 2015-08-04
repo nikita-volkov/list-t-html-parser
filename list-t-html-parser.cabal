@@ -51,7 +51,7 @@ library
     Haskell2010
   build-depends:
     list-t == 0.4.*,
-    html-tokenizer >= 0.3 && < 0.4,
+    html-tokenizer >= 0.4 && < 0.5,
     html-entities >= 1.1 && < 1.2,
     xml-types >= 0.3.6 && < 0.4,
     conversion == 1.*,
