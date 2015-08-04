@@ -85,6 +85,7 @@ test-suite hspec
     list-t-attoparsec == 0.4.*,
     list-t-text == 0.2.*,
     html-tokenizer,
+    xml-types >= 0.3.6 && < 0.4,
     conversion == 1.*,
     conversion-text == 1.*,
     either == 4.*,

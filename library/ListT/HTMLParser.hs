@@ -301,7 +301,7 @@ xmlNode :: Monad m => Parser m XMLTypes.Node
 xmlNode =
   cleanTokenSequence >>= \case
     [] -> throwError $ Just $ ErrorDetails_Message "Improper HTML node"
-    tokens -> XML.run XML.node tokens & \case
+    tokens -> XML.run XML.node (reverse tokens) & \case
       Just node -> return node
       -- If it's `Nothing`, then it's a bug.
 

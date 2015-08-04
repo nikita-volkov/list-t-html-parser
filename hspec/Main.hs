@@ -6,6 +6,7 @@ import Conversion
 import Conversion.Text
 import Control.Monad.Trans.Either
 import Data.Text (Text)
+import qualified Data.XML.Types as XML
 import qualified Data.Text.IO
 import qualified HTMLTokenizer.Parser
 import qualified ListT.Attoparsec
@@ -110,8 +111,24 @@ main =
         it "should be proper" $ shouldBe result (Right "<a><b/></a>")
     context "Complex HTML" $ do
       let text = "<p>a<strong>b</strong>c<br><br>d<br></p>"
-      result <- runIO $ parse (mconcat <$> many P.html) text
-      it "should be correct" $ shouldBe result (Right "<p>a<strong>b</strong>c<br/><br/>d<br/></p>")
+      context "html" $ do
+        result <- runIO $ parse (mconcat <$> many P.html) text
+        it "should be correct" $ shouldBe result (Right "<p>a<strong>b</strong>c<br/><br/>d<br/></p>")
+      context "xmlNode" $ do
+        result <- runIO $ parse P.xmlNode text
+        it "should be correct" $ shouldBe result $ Right $ 
+          XML.NodeElement $ XML.Element "p" [] [
+            XML.NodeContent (XML.ContentEntity "a"),
+            XML.NodeElement $ XML.Element "strong" [] [
+              XML.NodeContent (XML.ContentEntity "b")
+              ],
+            XML.NodeContent (XML.ContentEntity "c"),
+            XML.NodeElement $ XML.Element "br" [] [],
+            XML.NodeElement $ XML.Element "br" [] [],
+            XML.NodeContent (XML.ContentEntity "d"),
+            XML.NodeElement $ XML.Element "br" [] []
+            ]
+
     context "Complex HTML 2" $ do
       let text = "<a><b>c</b><d><e>f<g><h>i<j>k</j><l></a>"
       result <- runIO $ parse (mconcat <$> many P.html) text
