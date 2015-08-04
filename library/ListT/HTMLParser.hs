@@ -289,6 +289,7 @@ cleanTokenSequence :: Monad m => Parser m [HT.Token]
 cleanTokenSequence =
   fmap (fmap (either id id)) $
   flip execStateT [] $ fix $ \loop -> lift rawToken >>= \case
+    HT.Token_Doctype _ -> return ()
     HT.Token_ClosingTag ct -> do
       ours <- state $ \list -> fromMaybe ([], list) $ do
         (l, r) <- Just $ flip break list $ \case
