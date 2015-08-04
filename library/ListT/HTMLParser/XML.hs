@@ -2,7 +2,6 @@ module ListT.HTMLParser.XML where
 
 import ListT.HTMLParser.Prelude
 import qualified Data.XML.Types as XML
-import qualified Data.CaseInsensitive as CI
 import qualified HTMLTokenizer.Parser as Tokenizer
 
 
@@ -41,5 +40,5 @@ node =
       return (XML.NodeElement (XML.Element (convertIdent ident) (fmap convertAttribute attrs) subnodes))
     _ -> mzero
   where
-    convertIdent ident = XML.Name (CI.original ident) Nothing Nothing
+    convertIdent ident = XML.Name (convert ident) Nothing Nothing
     convertAttribute (ident, content) = (convertIdent ident, convert (fmap XML.ContentEntity content))
