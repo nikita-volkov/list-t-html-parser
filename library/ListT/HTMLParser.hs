@@ -16,6 +16,7 @@ module ListT.HTMLParser
   html,
   properHTML,
   properHTMLText,
+  xmlNode,
   -- * Combinators
   many1,
   manyTill,
@@ -38,7 +39,8 @@ import qualified ListT as L
 import qualified HTMLTokenizer.Parser as HT
 import qualified HTMLEntities.Decoder
 import qualified ListT.HTMLParser.Renderer as Renderer
-
+import qualified ListT.HTMLParser.XML as XML
+import qualified Data.XML.Types as XMLTypes
 
 -- |
 -- A backtracking HTML-tokens stream parser.
@@ -292,6 +294,16 @@ properHTMLText =
       l >>= \case
         HT.Token_Text t -> return $ convert t
         _ -> []
+
+-- |
+-- Works the same way as 'properHTML', but constructs an XML-tree.
+xmlNode :: Monad m => Parser m XMLTypes.Node
+xmlNode =
+  cleanTokenSequence >>= \case
+    [] -> throwError $ Just $ ErrorDetails_Message "Improper HTML node"
+    tokens -> XML.run XML.node tokens & \case
+      Just node -> return node
+      -- If it's `Nothing`, then it's a bug.
 
 cleanTokenSequence :: Monad m => Parser m [HT.Token]
 cleanTokenSequence =

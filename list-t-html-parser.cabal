@@ -40,6 +40,7 @@ library
     library
   other-modules:
     ListT.HTMLParser.Renderer
+    ListT.HTMLParser.XML
   exposed-modules:
     ListT.HTMLParser
   ghc-options:
@@ -52,6 +53,7 @@ library
     list-t == 0.4.*,
     html-tokenizer >= 0.3 && < 0.4,
     html-entities >= 1.0.1 && < 1.2,
+    xml-types >= 0.3.6 && < 0.4,
     conversion == 1.*,
     conversion-text == 1.*,
     conversion-case-insensitive == 1.*,
